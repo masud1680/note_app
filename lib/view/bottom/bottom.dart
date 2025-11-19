@@ -6,6 +6,8 @@ import 'package:note_app/view/note_add_edit/note_add_edit.dart';
 import 'package:note_app/view/settings/settings.dart';
 import 'package:note_app/view/trust/trust.dart';
 
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+
 class BottomSwitchScreen extends StatefulWidget {
   const BottomSwitchScreen({super.key});
 
@@ -17,85 +19,33 @@ class _BottomSwitchScreenState extends State<BottomSwitchScreen> {
   // State variable to hold the selected index
   int pageIndex = 0;
 
-  List screen = [NoteDisplay(), NoteModify(), Trust(), Settings()];
+  List screen = [NoteDisplay(), NoteModify(), Trust()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screen[pageIndex],
-
-
-
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: Color(0xFFFCE9D8),
-        items: [
-          CurvedNavigationBarItem(
-            child: Icon(Icons.home, color: Colors.grey,),
-            label: 'Notes',
-            labelStyle: pageIndex == 0 ? TextStyle(
-                color: Color(0xFF2E2827),
-                fontSize: 14,
-                fontWeight: FontWeight.w600
-            ) : TextStyle(
-                color: Color(0xFF757575),
-                fontSize: 13,
-                fontWeight: FontWeight.w500
-            ),
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.add,color: Colors.grey,),
-            label: 'Category',
-            labelStyle: pageIndex == 1 ? TextStyle(
-                color: Color(0xFF2E2827),
-                fontSize: 14,
-                fontWeight: FontWeight.w600
-            ) : TextStyle(
-                color: Color(0xFF757575),
-                fontSize: 13,
-                fontWeight: FontWeight.w500
-            ),
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.delete_forever,color: Colors.grey,),
-            label: 'Trust',
-            labelStyle: pageIndex == 2 ? TextStyle(
-                color: Color(0xFF2E2827),
-                fontSize: 14,
-                fontWeight: FontWeight.w600
-            ) : TextStyle(
-                color: Color(0xFF757575),
-                fontSize: 13,
-                fontWeight: FontWeight.w500
-            ),
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.settings, color: Colors.grey,),
-            label: 'Cart',
-            labelStyle: pageIndex == 3 ? TextStyle(
-                color: Color(0xFF2E2827),
-                fontSize: 14,
-                fontWeight: FontWeight.w600
-            ) : TextStyle(
-                color: Color(0xFF757575),
-                fontSize: 13,
-                fontWeight: FontWeight.w500
+      // body: screen[pageIndex],
+      bottomNavigationBar:  PersistentTabView(
+        tabs: [
+          PersistentTabConfig(
+            screen: NoteDisplay(),
+            item: ItemConfig(
+              icon: Icon(Icons.folder_copy_outlined),
+              title: "Note",
             ),
           ),
 
+          PersistentTabConfig(
+            screen: Trust(),
+            item: ItemConfig(
+              icon: Icon(Icons.delete_outline_outlined),
+              title: "Trust",
+            ),
+          ),
         ],
-        onTap: (index) {
-          // Handle button tap
-          pageIndex = index;
-          setState(() {
-
-          });
-
-        },
+        navBarBuilder: (navBarConfig) =>
+            Style1BottomNavBar(navBarConfig: navBarConfig),
       ),
-
-
-
     );
   }
 }
