@@ -13,7 +13,6 @@ class NoteModify extends StatefulWidget {
 }
 
 class _NoteModifyState extends State<NoteModify> {
-
   late DateTime _currentTime;
   late Timer _timer;
 
@@ -39,7 +38,6 @@ class _NoteModifyState extends State<NoteModify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -76,8 +74,8 @@ class _NoteModifyState extends State<NoteModify> {
                     ),
                   ],
                 ),
-            
-                SizedBox(height: 20,),
+
+                SizedBox(height: 20),
                 // title
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -86,40 +84,35 @@ class _NoteModifyState extends State<NoteModify> {
                     maxLines: 5,
                     minLines: 1,
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30, fontWeight:
-                    FontWeight.w700),
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                    ),
                     decoration: InputDecoration(
-
                       hintText: "Title",
+
                       hintStyle: TextStyle(
-                        color: Colors.black,
+                        color: Colors.grey,
                         fontWeight: FontWeight.w700,
-                        fontSize: 30
+                        fontSize: 30,
+
                       ),
-            
-            
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none
-                      ),
-            
+
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
                     ),
                   ),
                 ),
-            
+
                 // details
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     controller: detailsController,
-maxLines: 1000,
+                    maxLines: 1000,
                     decoration: InputDecoration(
-
-                      hintText: "Details",
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide.none
-                      ),
-            
+                      hintText: "Details....",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
                     ),
                   ),
                 ),
@@ -128,21 +121,38 @@ maxLines: 1000,
           ),
         ),
       ),
-      
-      floatingActionButton: ElevatedButton(onPressed: () {
-        log("saved");
-        Map<String,dynamic> singleNoteMap =
-          {
-          "id" : NotesData.list.length,
-          "title" : titleController.text,
-          "details" : detailsController.text,
-          "created_at" : "${_currentTime.day}-${_currentTime.month}-${_currentTime.year} / ${_currentTime.hour}:${_currentTime.minute}:${_currentTime.second}",
-          };
 
-      NotesData.list.add(singleNoteMap);
-        print(singleNoteMap);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => NoteDisplay(),));
-      }, child: Text("Save")),
+      floatingActionButton: ElevatedButton(
+        onPressed: () {
+
+
+          if (titleController.text.isNotEmpty &&
+              detailsController.text.isNotEmpty) {
+            Map<String, dynamic> singleNoteMap = {
+              "id": NotesData.list.length,
+              "title": titleController.text,
+              "details": detailsController.text,
+              "created_at": {
+                "shortDate" : " ${_currentTime.day}/${_currentTime.month}",
+                "date" : "${_currentTime.day}-${_currentTime.month}-${_currentTime.year}",
+                "time" : "${_currentTime.hour}:${_currentTime.minute}:${_currentTime.second}",
+              },
+
+
+            };
+
+            NotesData.list.add(singleNoteMap);
+          } else {
+       log("not saved......");
+
+
+
+          }
+
+          Navigator.pop(context);
+        },
+        child: Text("Save"),
+      ),
     );
   }
 }

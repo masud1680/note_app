@@ -72,44 +72,73 @@ class _NoteDisplayState extends State<NoteDisplay> {
         centerTitle: true,
         title: Text("Masud"),
         actions: [
+          // note card shep changes
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            height: 50,
+            width: 35,
+            child: Icon(Icons.list,size: 25,),
+          ),
+          // settings
           Padding(
             padding: const EdgeInsets.only(right: 15),
-            child: InkWell(
+            child: InkWell(splashColor: Colors.transparent,
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Settings()),
                 );
               },
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Icon(Icons.settings_rounded),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                height: 50,
+                width: 35,
+                child: Icon(Icons.hexagon_outlined, size: 25,),
               ),
             ),
           ),
-
-          // 1. The Icon Button (where the click action is defined)
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 10,
           children: [
             InkWell(
+              splashColor: Colors.transparent,
               onTap: () {
                 // 2. Call the function to show the dialog when pressed
                 _showCustomCard(context);
               },
-              child: Card(
-                color: Colors.green,
-
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.open_in_browser, color: Colors.white),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF4A758),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                height: 50,
+                width: 100,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Notes",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -146,17 +175,6 @@ class _NoteDisplayState extends State<NoteDisplay> {
                     ),
                   ),
                 ),
-
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF4A758),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  height: 50,
-                  width: 50,
-                  child: Icon(Icons.tune_sharp),
-                ),
               ],
             ),
 
@@ -170,58 +188,70 @@ class _NoteDisplayState extends State<NoteDisplay> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NoteDetails(
-                            title: '${NotesData.list[index]["title"]}',
-                            details: '${NotesData.list[index]["details"]}',
-                            created_at:'Last edited : ${NotesData.list[index]["created_at"]}',
-                          ),
-                        ),
-                      );
+                          builder: (context) => NoteDetails(SingleNoteData: NotesData.list[index],),),);
                     },
 
                     onLongPress: () {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("Are you sure to delete this Note"),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Cancel"),
+                              ),
 
-                      NotesData.trustList.add(NotesData.list[index]); // save to trust
-                      NotesData.list.removeAt(index);
+                              ElevatedButton(
+                                onPressed: () {
+                                  NotesData.trustList.add(
+                                    NotesData.list[index],
+                                  ); // save to trust
+                                  NotesData.list.removeAt(index);
 
-
+                                  Navigator.pop(context);
+                                  setState(() {});
+                                },
+                                child: Text("Confirm"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                       setState(() {});
-
                     },
 
                     child: Card(
                       color: Color(0xFFE8DEE6),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          children: [
-                            // title & date
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // title
-                                Text(
-                                  "${NotesData.list[index]["title"]}",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Text(
-                                  "Last edited : ${NotesData.list[index]["created_at"]}",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            // image
-                          ],
+                      child: ListTile(
+                        shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
                         ),
+                        tileColor: Colors.green[100],
+                        title: Text(
+                          "${NotesData.list[index]["title"]}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20
+                          ),
+                          maxLines: 1,
+                        ),
+                        subtitle: Text(
+                          "${NotesData.list[index]["details"]}",
+                          maxLines: 2,
+                        ),
+
+                        trailing: Text(
+                          "${NotesData.list[index]["created_at"]["shortDate"]}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
                       ),
                     ),
                   );

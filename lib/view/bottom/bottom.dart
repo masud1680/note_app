@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
@@ -19,33 +21,52 @@ class _BottomSwitchScreenState extends State<BottomSwitchScreen> {
   // State variable to hold the selected index
   int pageIndex = 0;
 
-  List screen = [NoteDisplay(), NoteModify(), Trust()];
+  List screen = [NoteDisplay(), Trust()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: screen[pageIndex],
-      bottomNavigationBar:  PersistentTabView(
-        tabs: [
-          PersistentTabConfig(
-            screen: NoteDisplay(),
-            item: ItemConfig(
-              icon: Icon(Icons.folder_copy_outlined),
-              title: "Note",
-            ),
-          ),
+      body: screen[pageIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: pageIndex,
+        onTap: (index) {
+          pageIndex = index;
+          setState(() {
 
-          PersistentTabConfig(
-            screen: Trust(),
-            item: ItemConfig(
-              icon: Icon(Icons.delete_outline_outlined),
-              title: "Trust",
-            ),
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.note_add_outlined),
+            label: "Notes",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.delete_forever),
+            label: "Trust",
           ),
         ],
-        navBarBuilder: (navBarConfig) =>
-            Style1BottomNavBar(navBarConfig: navBarConfig),
       ),
+      // bottomNavigationBar:  PersistentTabView(
+      //   tabs: [
+      //     PersistentTabConfig(
+      //       screen: NoteDisplay(),
+      //       item: ItemConfig(
+      //         icon: Icon(Icons.folder_copy_outlined),
+      //         title: "Note",
+      //       ),
+      //     ),
+      //
+      //     PersistentTabConfig(
+      //       screen: Trust(),
+      //       item: ItemConfig(
+      //         icon: Icon(Icons.delete_outline_outlined),
+      //         title: "Trust",
+      //       ),
+      //     ),
+      //   ],
+      //   navBarBuilder: (navBarConfig) =>
+      //       Style1BottomNavBar(navBarConfig: navBarConfig),
+      // ),
     );
   }
 }

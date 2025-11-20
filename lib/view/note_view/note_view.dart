@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 
 class NoteDetails extends StatelessWidget {
   const NoteDetails({
-    super.key,
-    required this.title,
-    required this.details,
-    required this.created_at,
+    super.key, required this.SingleNoteData,
+
   });
-  final String title;
-  final String details;
-  final String created_at;
+
+  final Map<String,dynamic> SingleNoteData ;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +34,7 @@ class NoteDetails extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${created_at}",
+                      "${SingleNoteData["created_at"]["date"]} / ${SingleNoteData["created_at"]["time"]}",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -52,7 +49,7 @@ class NoteDetails extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "${title}",
+                    "${SingleNoteData["title"]}",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 20,
@@ -65,7 +62,7 @@ class NoteDetails extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "${details}",
+                    "${SingleNoteData["details"]}",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,

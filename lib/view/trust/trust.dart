@@ -14,10 +14,6 @@ class Trust extends StatefulWidget {
 }
 
 class _TrustState extends State<Trust> {
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +88,7 @@ class _TrustState extends State<Trust> {
                   ),
                   height: 50,
                   width: 50,
-                  child: Icon(Icons.tune_sharp),
+                  child: Icon(Icons.list),
                 ),
               ],
             ),
@@ -105,67 +101,113 @@ class _TrustState extends State<Trust> {
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => NoteDetails(title: '${NotesData.trustList[index]["title"]}', details: '${NotesData.trustList[index]["details"]}', created_at: 'Last edited : ${NotesData.trustList[index]["created_at"]}',),));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NoteDetails(SingleNoteData: NotesData.trustList[index],
+                                ),
+                              ),
+                            );
                           },
                           onLongPress: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    "Choose any option",
+                                  ),
+                                  content:      ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Cancel",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                  actions: [
 
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        NotesData.trustList.removeAt(
+                                          index,
+                                        ); // remove to trust
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                      },
+                                      child: Text("Delete",
+                                style: TextStyle(fontSize: 15),
+                                ),
+                                    ),
 
-                            NotesData.trustList.removeAt(index);// remove to trust
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        NotesData.list.add(
+                                          NotesData.trustList[index],
+                                        ); // save to trust
+                                        NotesData.trustList.removeAt(index);
 
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                      },
+                                      child: Text("Restore",
+                                      style: TextStyle(fontSize: 15),),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
 
                             setState(() {});
                           },
 
                           child: Card(
                             color: Color(0xFFE8DEE6),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                children: [
-                                  // title & date
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // title
-                                      Text(
-                                        "${NotesData.trustList[index]["title"]}",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Last edited : ${NotesData.trustList[index]["created_at"]}",
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  // image
-                                ],
+                            child: ListTile(
+                              shape: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none
                               ),
+                              tileColor: Colors.green[100],
+                              title: Text(
+                                "${NotesData.trustList[index]["title"]}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20
+                                ),
+                                maxLines: 1,
+                              ),
+                              subtitle: Text(
+                                "${NotesData.trustList[index]["details"]}",
+                                maxLines: 2,
+                              ),
+
+                              trailing: Text(
+                                "${NotesData.trustList[index]["created_at"]["shortDate"]}",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+
                             ),
                           ),
                         );
                       },
                     ),
                   )
-                : Center(child: Text("Empty")),
+                : Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 100),
+                  child: Center(child: Text(
+                      "No trust Notes",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600
+                    ),
+                  )),
+                ),
           ],
         ),
       ),
-      
-      floatingActionButton: ElevatedButton(onPressed: () {
-        setState(() {
-          
-        });
-      }, child: Icon(Icons.refresh)),
     );
   }
 }
