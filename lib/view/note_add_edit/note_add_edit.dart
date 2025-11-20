@@ -6,8 +6,11 @@ import 'package:note_app/database/notes_data.dart';
 import 'package:note_app/view/note/note.dart';
 
 class NoteModify extends StatefulWidget {
-  const NoteModify({super.key});
+  const NoteModify({super.key, required this.noteIndex});
 
+  final int noteIndex; // received index
+
+  // timer start
   @override
   State<NoteModify> createState() => _NoteModifyState();
 }
@@ -18,6 +21,13 @@ class _NoteModifyState extends State<NoteModify> {
 
   @override
   void initState() {
+
+    if(widget.noteIndex != -1){
+      int index = widget.noteIndex;
+      addDataTextField(index);
+    }
+
+
     super.initState();
     _currentTime = DateTime.now();
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
@@ -31,10 +41,18 @@ class _NoteModifyState extends State<NoteModify> {
   void dispose() {
     _timer.cancel(); // Important: cancel the timer when the widget is disposed
     super.dispose();
-  }
+  } // timer stop
+
+
 
   TextEditingController titleController = TextEditingController();
   TextEditingController detailsController = TextEditingController();
+
+  void addDataTextField(index) {
+    titleController.text = NotesData.list[index]["title"];
+    detailsController.text = NotesData.list[index]["details"];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +113,6 @@ class _NoteModifyState extends State<NoteModify> {
                         color: Colors.grey,
                         fontWeight: FontWeight.w700,
                         fontSize: 30,
-
                       ),
 
                       border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -129,27 +146,32 @@ class _NoteModifyState extends State<NoteModify> {
           if (titleController.text.isNotEmpty &&
               detailsController.text.isNotEmpty) {
             Map<String, dynamic> singleNoteMap = {
-              "id": NotesData.list.length,
+              "id": widget.noteIndex != -1 ? widget.noteIndex : NotesData.list.length,
               "title": titleController.text,
               "details": detailsController.text,
               "created_at": {
-                "shortDate" : " ${_currentTime.day}/${_currentTime.month}",
-                "date" : "${_currentTime.day}-${_currentTime.month}-${_currentTime.year}",
-                "time" : "${_currentTime.hour}:${_currentTime.minute}:${_currentTime.second}",
+                "shortDate": " ${_currentTime.day}/${_currentTime.month}",
+                "date":
+                "${_currentTime.day}-${_currentTime.month}-${_currentTime.year}",
+                "time":
+                "${_currentTime.hour}:${_currentTime.minute}:${_currentTime.second}",
               },
-
-
             };
+            if(widget.noteIndex == -1){
+              NotesData.list.add(singleNoteMap);
+            }else{
+              NotesData.list[widget.noteIndex] = singleNoteMap;
+            }
 
-            NotesData.list.add(singleNoteMap);
           } else {
-       log("not saved......");
-
-
-
+            log("not saved......");
           }
 
+
+
+
           Navigator.pop(context);
+
         },
         child: Text("Save"),
       ),

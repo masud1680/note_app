@@ -188,7 +188,11 @@ class _NoteDisplayState extends State<NoteDisplay> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NoteDetails(SingleNoteData: NotesData.list[index],),),);
+                          builder: (context) => NoteDetails(SingleNoteData: NotesData.list[index], noteIndex: index,),),).then((value) {
+                            setState(() {
+                              
+                            });
+                          },);
                     },
 
                     onLongPress: () {
@@ -266,7 +270,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NoteModify()),
+            MaterialPageRoute(builder: (context) => NoteModify(noteIndex: -1 ,)),
           ).then((value) {
             setState(() {});
           });

@@ -104,7 +104,7 @@ class _TrustState extends State<Trust> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NoteDetails(SingleNoteData: NotesData.trustList[index],
+                                builder: (context) => NoteDetails(SingleNoteData: NotesData.trustList[index], noteIndex: index,
                                 ),
                               ),
                             );
