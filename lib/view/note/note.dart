@@ -188,7 +188,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NoteDetails(SingleNoteData: NotesData.list[index], noteIndex: index,),),).then((value) {
+                          builder: (context) => NoteDetails( noteIndex: index, whichPage: 'note',),),).then((value) {
                             setState(() {
                               
                             });
@@ -212,7 +212,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
 
                               ElevatedButton(
                                 onPressed: () {
-                                  NotesData.trustList.add(
+                                  NotesData.trashList.add(
                                     NotesData.list[index],
                                   ); // save to trust
                                   NotesData.list.removeAt(index);

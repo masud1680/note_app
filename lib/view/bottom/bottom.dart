@@ -10,6 +10,8 @@ import 'package:note_app/view/trust/trust.dart';
 
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
+import '../trash/trust.dart';
+
 class BottomSwitchScreen extends StatefulWidget {
   const BottomSwitchScreen({super.key});
 
@@ -21,7 +23,7 @@ class _BottomSwitchScreenState extends State<BottomSwitchScreen> {
   // State variable to hold the selected index
   int pageIndex = 0;
 
-  List screen = [NoteDisplay(), Trust()];
+  List screen = [NoteDisplay(), Trash()];
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class _BottomSwitchScreenState extends State<BottomSwitchScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.delete_forever),
-            label: "Trust",
+            label: "trash",
           ),
         ],
       ),

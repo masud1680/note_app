@@ -4,17 +4,22 @@ import 'package:note_app/view/note_add_edit/note_add_edit.dart';
 
 class NoteDetails extends StatefulWidget {
   const NoteDetails({
-    super.key, required this.SingleNoteData, required this.noteIndex,
+    super.key,  required this.noteIndex, required this.whichPage,
 
   });
+
   final int noteIndex ;
-  final Map<String,dynamic> SingleNoteData ;
+  final String whichPage ;
+
 
   @override
   State<NoteDetails> createState() => _NoteDetailsState();
 }
 
 class _NoteDetailsState extends State<NoteDetails> {
+
+  // get single note data
+  late Map<String,dynamic> singleNoteData = widget.whichPage == "note" ? NotesData.list[widget.noteIndex] : NotesData.trashList[widget.noteIndex];
 
   @override
   void initState() {
@@ -60,7 +65,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "${NotesData.list[widget.noteIndex]["created_at"]["date"]} / ${NotesData.list[widget.noteIndex]["created_at"]["time"]}",
+                        "${singleNoteData["created_at"]["date"]} / ${singleNoteData["created_at"]["time"]}",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14,
@@ -75,7 +80,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "${NotesData.list[widget.noteIndex]["title"]}",
+                      "${singleNoteData["title"]}",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -88,7 +93,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "${NotesData.list[widget.noteIndex]["details"]}",
+                      "${singleNoteData["details"]}",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
