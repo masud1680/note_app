@@ -62,7 +62,7 @@ class _NoteModifyState extends State<NoteModify> {
 
         title: Padding(
           padding: const EdgeInsets.only(left: 15),
-          child: Text("Note view"),
+          child: Text("Note Editor"),
         ),
       ),
       body: Padding(

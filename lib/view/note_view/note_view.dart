@@ -31,7 +31,7 @@ class _NoteDetailsState extends State<NoteDetails> {
       backgroundColor: Colors.white,
       appBar: AppBar(
           backgroundColor: Colors.white,
-        title: Text("Note"),
+        title: Text("Note View"),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
