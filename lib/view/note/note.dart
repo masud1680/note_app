@@ -5,7 +5,7 @@ import 'package:note_app/database/notes_data.dart';
 import 'package:note_app/view/note_add_edit/note_add_edit.dart';
 import 'package:note_app/view/note_view/note_view.dart';
 import 'package:note_app/view/settings/settings.dart';
-import 'package:note_app/view/trust/trust.dart';
+import 'package:note_app/view/trust/trash.dart';
 
 class NoteDisplay extends StatefulWidget {
   const NoteDisplay({super.key});

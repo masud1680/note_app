@@ -17,10 +17,6 @@ class NoteDetails extends StatefulWidget {
 }
 
 class _NoteDetailsState extends State<NoteDetails> {
-
-  // get single note data
-  late Map<String,dynamic> singleNoteData = widget.whichPage == "note" ? NotesData.list[widget.noteIndex] : NotesData.trashList[widget.noteIndex];
-
   @override
   void initState() {
     // TODO: implement initState
@@ -30,6 +26,11 @@ class _NoteDetailsState extends State<NoteDetails> {
 
     });
   }
+
+  // get single note data
+  late Map<String,dynamic> singleNoteData = widget.whichPage == "note" ? NotesData.list[widget.noteIndex] : NotesData.trashList[widget.noteIndex];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +46,7 @@ class _NoteDetailsState extends State<NoteDetails> {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => NoteModify(noteIndex: widget.noteIndex,),)).then((value) {
               setState(() {
-
+                singleNoteData = widget.whichPage == "note" ? NotesData.list[widget.noteIndex] : NotesData.trashList[widget.noteIndex];
               });
             },);
           },

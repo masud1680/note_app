@@ -6,11 +6,11 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:note_app/view/note/note.dart';
 import 'package:note_app/view/note_add_edit/note_add_edit.dart';
 import 'package:note_app/view/settings/settings.dart';
-import 'package:note_app/view/trust/trust.dart';
+import 'package:note_app/view/trust/trash.dart';
 
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
-import '../trash/trust.dart';
+import '../trash/trash.dart';
 
 class BottomSwitchScreen extends StatefulWidget {
   const BottomSwitchScreen({super.key});
