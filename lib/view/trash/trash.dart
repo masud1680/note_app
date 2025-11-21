@@ -21,7 +21,7 @@ class _TrashState extends State<Trash> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text("Trust"),
+        title: Text("Trash"),
         // actions: [
         //   Padding(
         //     padding: const EdgeInsets.only(right: 15),

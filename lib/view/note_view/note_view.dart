@@ -44,11 +44,13 @@ class _NoteDetailsState extends State<NoteDetails> {
         child: InkWell(
           splashColor: Colors.transparent,
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => NoteModify(noteIndex: widget.noteIndex,),)).then((value) {
-              setState(() {
-                singleNoteData = widget.whichPage == "note" ? NotesData.list[widget.noteIndex] : NotesData.trashList[widget.noteIndex];
-              });
-            },);
+            if(widget.whichPage == "note"){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NoteModify(noteIndex: widget.noteIndex,),)).then((value) {
+                setState(() {
+                  singleNoteData = widget.whichPage == "note" ? NotesData.list[widget.noteIndex] : NotesData.trashList[widget.noteIndex];
+                });
+              },);
+            }
           },
           child: Container(
             decoration: BoxDecoration(
