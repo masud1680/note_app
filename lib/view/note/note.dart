@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:note_app/database/notes_data.dart';
+import 'package:note_app/view/note/widgets/note_searchBar.dart';
+import 'package:note_app/view/note/widgets/note_single_card.dart';
 import 'package:note_app/view/note_add_edit/note_add_edit.dart';
 import 'package:note_app/view/note_view/note_view.dart';
 import 'package:note_app/view/settings/settings.dart';
-import 'package:note_app/view/trust/trash.dart';
+
 
 class NoteDisplay extends StatefulWidget {
   const NoteDisplay({super.key});
@@ -20,7 +22,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        // This widget is what appears as the popup on the screen
+        // This widgets is what appears as the popup on the screen
         return AlertDialog(
           // Use the 'shape' property to give the card rounded corners
           shape: RoundedRectangleBorder(
@@ -144,39 +146,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
             ),
 
             //Search box
-            Row(
-              children: [
-                //input search box
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 1),
-                      filled: true,
-                      fillColor: Color(0xFFF5F5F5),
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Icon(
-                          Icons.search,
-                          color: Color(0xFFB3B3B3),
-                          size: 20,
-                        ),
-                      ),
-                      hintText: "Search Products",
-                      hintStyle: TextStyle(color: Color(0xFFB3B3B3)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            NoteSearchBarWidget(),
 
             // show note list
             Expanded(
@@ -229,35 +199,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
                       setState(() {});
                     },
 
-                    child: Card(
-                      color: Color(0xFFE8DEE6),
-                      child: ListTile(
-                        shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none
-                        ),
-                        tileColor: Colors.green[100],
-                        title: Text(
-                          "${NotesData.list[index]["title"]}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20
-                          ),
-                          maxLines: 1,
-                        ),
-                        subtitle: Text(
-                          "${NotesData.list[index]["details"]}",
-                          maxLines: 2,
-                        ),
-
-                        trailing: Text(
-                          "${NotesData.list[index]["created_at"]["shortDate"]}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-
-                      ),
-                    ),
+                    child: NoteSingleCard(index: index,),
                   );
                 },
               ),
@@ -280,3 +222,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
     );
   }
 }
+
+
+
+

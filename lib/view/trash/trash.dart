@@ -21,25 +21,8 @@ class _TrashState extends State<Trash> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text("Trash"),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 15),
-        //     child: InkWell(
-        //       onTap: () {
-        //         // Navigator.push(context, MaterialPageRoute(builder: (context) => Settings(),));
-        //       },
-        //       child: Card(
-        //         child: Padding(
-        //           padding: const EdgeInsets.all(10),
-        //           child: Icon(Icons.settings_rounded),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        //
-        //   // 1. The Icon Button (where the click action is defined)
-        // ],
+        title: Text("Trash"""),
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

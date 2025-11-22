@@ -4,6 +4,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:note_app/database/notes_data.dart';
 import 'package:note_app/view/note/note.dart';
+import 'package:note_app/view/note_add_edit/widgets/editor_data_save_button.dart';
+import 'package:note_app/view/note_add_edit/widgets/editor_details_input_field_widget.dart';
+import 'package:note_app/view/note_add_edit/widgets/editor_title_input_field_widget.dart';
+import 'package:note_app/view/note_add_edit/widgets/show_realtime_date_time_widget.dart';
 
 class NoteModify extends StatefulWidget {
   const NoteModify({super.key, required this.noteIndex});
@@ -39,7 +43,7 @@ class _NoteModifyState extends State<NoteModify> {
 
   @override
   void dispose() {
-    _timer.cancel(); // Important: cancel the timer when the widget is disposed
+    _timer.cancel(); // Important: cancel the timer when the widgets is disposed
     super.dispose();
   } // timer stop
 
@@ -79,102 +83,29 @@ class _NoteModifyState extends State<NoteModify> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // date
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${_currentTime.day}-${_currentTime.month}-${_currentTime.year}    <|>       ${_currentTime.hour} : ${_currentTime.minute} : ${_currentTime.second}",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
+                ShowRealtimeDateTimeWidget(currentTime: _currentTime),
 
                 SizedBox(height: 20),
                 // title
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: titleController,
-                    maxLines: 5,
-                    minLines: 1,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: "Title",
-
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 30,
-                      ),
-
-                      border: OutlineInputBorder(borderSide: BorderSide.none),
-                    ),
-                  ),
-                ),
+                EditorTitleInputFieldWidget(titleController: titleController),
 
                 // details
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: detailsController,
-                    maxLines: 1000,
-                    decoration: InputDecoration(
-                      hintText: "Details....",
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(borderSide: BorderSide.none),
-                    ),
-                  ),
-                ),
+                EditorDetailsInputFieldWidget(detailsController: detailsController),
               ],
             ),
           ),
         ),
       ),
-
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-
-
-          if (titleController.text.isNotEmpty &&
-              detailsController.text.isNotEmpty) {
-            Map<String, dynamic> singleNoteMap = {
-              "id": widget.noteIndex != -1 ? widget.noteIndex : NotesData.list.length,
-              "title": titleController.text,
-              "details": detailsController.text,
-              "created_at": {
-                "shortDate": " ${_currentTime.day}/${_currentTime.month}",
-                "date":
-                "${_currentTime.day}-${_currentTime.month}-${_currentTime.year}",
-                "time":
-                "${_currentTime.hour}:${_currentTime.minute}:${_currentTime.second}",
-              },
-            };
-            if(widget.noteIndex == -1){
-              NotesData.list.add(singleNoteMap);
-            }else{
-              NotesData.list[widget.noteIndex] = singleNoteMap;
-            }
-
-          } else {
-            log("not saved......");
-          }
-
-
-
-
-          Navigator.pop(context);
-
-        },
-        child: Text("Save"),
-      ),
+// save note information
+      floatingActionButton: EditorDataSaveButton(titleController: titleController, detailsController: detailsController, widget: widget, currentTime: _currentTime),
     );
   }
 }
+
+
+
+
+
+
+
+
