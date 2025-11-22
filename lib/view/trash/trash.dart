@@ -21,7 +21,7 @@ class _TrashState extends State<Trash> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text("Trash"""),
+        title: Text("Trash"),
 
       ),
       body: Padding(
