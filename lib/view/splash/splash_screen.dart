@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:note_app/view/authentication/signIn_screen.dart';
 import 'package:note_app/view/bottom/bottom.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -13,7 +15,21 @@ class _SplashScreenState extends State<SplashScreen> {
   
   void delayTime() async{
     await Future.delayed(Duration(seconds: 1));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen(),));
+
+    // // Obtain shared preferences.
+    final SharedPreferences prefsLogin =
+    await SharedPreferences.getInstance();
+
+    // // Save an boolean value to 'repeat' key.
+    var isLogin = prefsLogin.getBool('isLogin');
+
+    if(isLogin == true){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  BottomSwitchScreen(),));
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  SignInScreen(),));
+    }
+
+
   }
   
   @override

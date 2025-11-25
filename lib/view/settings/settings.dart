@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:note_app/view/authentication/signIn_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -40,33 +41,33 @@ class _SettingsState extends State<Settings> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 spacing: 15,
                 children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Sync to Cloud",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Row(
-                      spacing: 2,
-                      children: [
-                        Text(
-                          "Enable",
-                          style: TextStyle(
-                            color: Color(0xFF9F9FA9),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Sync to Cloud",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
                         ),
-                        Icon(Icons.navigate_next,color: Color(0xFF9F9FA9),)
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                      Row(
+                        spacing: 2,
+                        children: [
+                          Text(
+                            "Enable",
+                            style: TextStyle(
+                              color: Color(0xFF9F9FA9),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Icon(Icons.navigate_next, color: Color(0xFF9F9FA9)),
+                        ],
+                      ),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -78,35 +79,48 @@ class _SettingsState extends State<Settings> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      Icon(Icons.toggle_off,
+                      Icon(
+                        Icons.toggle_off,
                         color: Color(0xFF9F9FA9),
                         size: 50,
-                      )
+                      ),
                     ],
                   ),
-
                 ],
               ),
             ),
 
             ElevatedButton(
               style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Colors.red,),
+                backgroundColor: WidgetStatePropertyAll(Colors.red),
 
-                padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 80,vertical: 10),)
+                padding: WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+                ),
               ),
-              onPressed: () {
-Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen(),));
-            },
+              onPressed: () async {
+
+                // Obtain shared preferences.
+                final SharedPreferences prefsLogin =
+                    await SharedPreferences.getInstance();
+                // Save an boolean value to 'repeat' key.
+                prefsLogin.remove("isLogin");
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignInScreen()),
+                );
+
+              },
               child: Text(
-              "Logout",
-              style: TextStyle(
+                "Logout",
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 20
+                  fontSize: 20,
+                ),
               ),
             ),
-            )
           ],
         ),
       ),

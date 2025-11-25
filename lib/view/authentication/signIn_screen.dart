@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:note_app/view/authentication/signUp_screen.dart';
+import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:note_app/database/user_data.dart';
+import 'package:note_app/view/authentication/signUp_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../bottom/bottom.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -12,6 +15,8 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   bool passwordVisible = true;
+  final TextEditingController inputEmail = TextEditingController();
+  final TextEditingController inputPassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +150,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ],
               ),
               SizedBox(height: 30),
-              //Phone number & password
+              //Email number & password
               Column(
                 spacing: 10,
                 children: [
@@ -155,7 +160,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     spacing: 6,
                     children: [
                       Text(
-                        "Phone Number",
+                        "Email",
                         style: TextStyle(
                           color: Color(0XFF5B5B5B),
                           fontSize: 15,
@@ -163,9 +168,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                       TextField(
-                        keyboardType: TextInputType.number,
+                        controller: inputEmail,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          hintText: "Enter your phone number",
+                          hintText: "Enter your email address",
                           hintStyle: TextStyle(color: Color(0xFFD4D4D4)),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -199,6 +205,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                       TextField(
+                        controller: inputPassword,
                         obscureText: passwordVisible,
 
                         decoration: InputDecoration(
@@ -257,14 +264,50 @@ class _SignInScreenState extends State<SignInScreen> {
 
               //Login with login google facebook buttons
               InkWell(
-                onTap: () {
+                onTap: () async {
                   // print("Login clicked...");
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BottomSwitchScreen(),
-                    ),
-                  );
+                  if (inputEmail.text == "" && inputPassword.text == "") {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Enter Email & Password")),
+                    );
+                  } else if (inputEmail.text == "") {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text("Enter Email.")));
+                  } else if (inputPassword.text == "") {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text("Enter Password.")));
+                  } else {
+                    var userFind = UserData.user.where(
+                      (value) => value["email"] == inputEmail.text && value["password"] == inputPassword.text,
+                    );
+
+                    if (userFind.isNotEmpty) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("Login success.")));
+
+                      // Obtain shared preferences.
+                      final SharedPreferences prefsLogin =
+                          await SharedPreferences.getInstance();
+                      // Save an boolean value to 'repeat' key.
+                      await prefsLogin.setBool('isLogin', true);
+                      // var p = prefsLogin.getBool('isLogin');
+                      //
+                      // log("============${p}=============");
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BottomSwitchScreen(),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Wrong user or password")),
+                      );
+                    }
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(
