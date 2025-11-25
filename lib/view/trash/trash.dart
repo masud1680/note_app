@@ -3,8 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:note_app/database/notes_data.dart';
+import 'package:note_app/view/note/widgets/note_single_card.dart';
 
+import '../../database/local_database.dart';
 import '../note_view/note_view.dart';
+import '../search/search_screen.dart';
 
 class Trash extends StatefulWidget {
   const Trash({super.key});
@@ -14,15 +17,34 @@ class Trash extends StatefulWidget {
 }
 
 class _TrashState extends State<Trash> {
+  // Database start
+  List<Map<String, dynamic>> allTrashNotes = [];
+  DBHelper? dbRef;
+
+  @override
+  void initState() {
+    super.initState();
+    dbRef = DBHelper.getInstance;
+    getTrashNotes();
+  }
+
+  void getTrashNotes() async {
+    allTrashNotes = await dbRef!.getAllTRASHNotes();
+    setState(() {
+      print(allTrashNotes);
+    });
+  }
+
+  // Database close
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFF5F5F5),
         centerTitle: true,
         title: Text("Trash"),
-
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -31,63 +53,54 @@ class _TrashState extends State<Trash> {
           spacing: 10,
           children: [
             //Search box
-            Row(
-              children: [
-                //input search box
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 1),
-                      filled: true,
-                      fillColor: Color(0xFFF5F5F5),
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: Icon(
-                          Icons.search,
-                          color: Color(0xFFB3B3B3),
-                          size: 20,
-                        ),
-                      ),
-                      hintText: "Search Products",
-                      hintStyle: TextStyle(color: Color(0xFFB3B3B3)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+            TextField(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchScreen()),
+                );
+              },
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 0),
+                filled: true,
+                fillColor: Color(0xFFE2E2E2),
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Icon(
+                    Icons.search_outlined,
+                    color: Color(0xFFB3B3B3),
+                    size: 25,
                   ),
                 ),
-
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF4A758),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  height: 50,
-                  width: 50,
-                  child: Icon(Icons.list),
+                hintText: "Search",
+                hintStyle: TextStyle(color: Color(0xFFB3B3B3)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none,
                 ),
-              ],
+
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
 
             // show note list
-            NotesData.trashList.isNotEmpty
+            allTrashNotes.isNotEmpty
                 ? Expanded(
                     child: ListView.builder(
-                      itemCount: NotesData.trashList.length,
+                      itemCount: allTrashNotes.length,
                       itemBuilder: (context, index) {
                         return InkWell(
+                          overlayColor: WidgetStateColor.transparent,
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NoteDetails( noteIndex: index, whichPage: 'trash',
+                                builder: (context) => NoteDetails(
+                                  noteIndex: index,
+                                  whichPage: 'trash',
                                 ),
                               ),
                             );
@@ -98,44 +111,84 @@ class _TrashState extends State<Trash> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text(
-                                    "Choose any option",
-                                  ),
-                                  content:      ElevatedButton(
+                                  backgroundColor: Colors.white,
+                                  title: Text("Choose any option"),
+                                  content: ElevatedButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text("Cancel",
+                                    child: Text(
+                                      "Cancel",
                                       style: TextStyle(fontSize: 20),
                                     ),
                                   ),
                                   actions: [
-
                                     ElevatedButton(
-                                      onPressed: () {
-                                        NotesData.trashList.removeAt(
-                                          index,
-                                        ); // remove to trust
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                          Colors.red,
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        // NotesData.trashList.removeAt(
+                                        //   index,
+                                        // ); // remove to trust
+
+                                        bool check = await dbRef!.deleteTRASHNote(
+                                          sno:
+                                              allTrashNotes[index][DBHelper
+                                                  .COLUMN_NOTE_SNO],
+                                        );
+                                        if (check) {
+                                          getTrashNotes();
+                                        }
+
                                         Navigator.pop(context);
                                         setState(() {});
                                       },
-                                      child: Text("Delete",
-                                style: TextStyle(fontSize: 15),
-                                ),
+                                      child: Text(
+                                        "Delete",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
 
                                     ElevatedButton(
-                                      onPressed: () {
-                                        NotesData.list.add(
-                                          NotesData.trashList[index],
-                                        ); // save to trust
-                                        NotesData.trashList.removeAt(index);
+                                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.green)),
+                                      onPressed: () async {
+                                        // NotesData.list.add(
+                                        //   NotesData.trashList[index],
+                                        // ); // save to trust
+                                        // NotesData.trashList.removeAt(index);
+                                        var reTitle =
+                                            allTrashNotes[index]["title"];
+                                        var reDes =
+                                            allTrashNotes[index]["desc"];
+                                        var reCreatedAt = DateTime.now()
+                                            .millisecondsSinceEpoch;
+                                        await dbRef!.addNote(
+                                          mTitle: reTitle,
+                                          mDesc: reDes,
+                                          mCreatedAt: reCreatedAt,
+                                        );
 
+                                        bool check = await dbRef!.deleteTRASHNote(
+                                          sno:
+                                              allTrashNotes[index][DBHelper
+                                                  .COLUMN_NOTE_SNO],
+                                        );
+                                        if (check) {
+                                          getTrashNotes();
+                                        }
                                         Navigator.pop(context);
                                         setState(() {});
                                       },
-                                      child: Text("Restore",
-                                      style: TextStyle(fontSize: 15),),
+                                      child: Text(
+                                        "Restore",
+                                        style: TextStyle(fontSize: 15, color: Colors.white),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -145,49 +198,27 @@ class _TrashState extends State<Trash> {
                             setState(() {});
                           },
 
-                          child: Card(
-                            color: Color(0xFFE8DEE6),
-                            child: ListTile(
-                              shape: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none
-                              ),
-                              tileColor: Colors.green[100],
-                              title: Text(
-                                "${NotesData.trashList[index]["title"]}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 20
-                                ),
-                                maxLines: 1,
-                              ),
-                              subtitle: Text(
-                                "${NotesData.trashList[index]["details"]}",
-                                maxLines: 2,
-                              ),
-
-                              trailing: Text(
-                                "${NotesData.trashList[index]["created_at"]["shortDate"]}",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                            ),
+                          child: NoteSingleCard(
+                            index: index,
+                            whichPage: 'trash',
+                            singleNoteMap: allTrashNotes[index],
                           ),
                         );
                       },
                     ),
                   )
                 : Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 100),
-                  child: Center(child: Text(
-                      "No trash Notes",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600
+                    padding: const EdgeInsets.symmetric(vertical: 100),
+                    child: Center(
+                      child: Text(
+                        "No trash Notes",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  )),
-                ),
+                  ),
           ],
         ),
       ),

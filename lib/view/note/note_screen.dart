@@ -138,7 +138,7 @@ class _NoteScreenState extends State<NoteScreen> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20,
+                        fontSize: 15,
                         fontWeight: FontWeight.w400,
                       ),
                     ),

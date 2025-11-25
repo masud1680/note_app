@@ -6,8 +6,11 @@ import 'package:note_app/view/note/widgets/note_searchBar.dart';
 import 'package:note_app/view/note/widgets/note_single_card.dart';
 import 'package:note_app/view/note_add_edit/note_add_edit.dart';
 import 'package:note_app/view/note_view/note_view.dart';
+import 'package:note_app/view/search/search_screen.dart';
 import 'package:note_app/view/settings/settings.dart';
+import 'package:intl/intl.dart';
 
+import '../../database/local_database.dart';
 
 class NoteDisplay extends StatefulWidget {
   const NoteDisplay({super.key});
@@ -17,6 +20,8 @@ class NoteDisplay extends StatefulWidget {
 }
 
 class _NoteDisplayState extends State<NoteDisplay> {
+  // popup note card start
+
   // Function to show the custom popup card
   void _showCustomCard(BuildContext context) {
     showDialog(
@@ -24,6 +29,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
       builder: (BuildContext dialogContext) {
         // This widgets is what appears as the popup on the screen
         return AlertDialog(
+          backgroundColor: Colors.white,
           // Use the 'shape' property to give the card rounded corners
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -45,6 +51,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
                 // Example of a list item inside the card
                 ListTile(
                   leading: Icon(Icons.settings),
+
                   title: Text('Settings Option'),
                 ),
               ],
@@ -65,12 +72,33 @@ class _NoteDisplayState extends State<NoteDisplay> {
     );
   }
 
+  // popup note card close
+
+  // Database start
+  List<Map<String, dynamic>> allNotes = [];
+  DBHelper? dbRef;
+
+  @override
+  void initState() {
+    super.initState();
+    dbRef = DBHelper.getInstance;
+    getNotes();
+  }
+
+  void getNotes() async {
+    allNotes = await dbRef!.getAllNotes();
+    setState(() {});
+  }
+
+  // Database close
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFF5F5F5),
+        leading: SizedBox(),
         centerTitle: true,
         title: Text("Masud"),
         actions: [
@@ -83,12 +111,13 @@ class _NoteDisplayState extends State<NoteDisplay> {
             ),
             height: 50,
             width: 35,
-            child: Icon(Icons.list,size: 25,),
+            child: Icon(Icons.list, size: 25),
           ),
           // settings
           Padding(
             padding: const EdgeInsets.only(right: 15),
-            child: InkWell(splashColor: Colors.transparent,
+            child: InkWell(
+              splashColor: Colors.transparent,
               onTap: () {
                 Navigator.push(
                   context,
@@ -103,14 +132,14 @@ class _NoteDisplayState extends State<NoteDisplay> {
                 ),
                 height: 50,
                 width: 35,
-                child: Icon(Icons.hexagon_outlined, size: 25,),
+                child: Icon(Icons.hexagon_outlined, size: 25),
               ),
             ),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 10,
@@ -137,7 +166,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontWeight: FontWeight.w600
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -151,18 +180,22 @@ class _NoteDisplayState extends State<NoteDisplay> {
             // show note list
             Expanded(
               child: ListView.builder(
-                itemCount: NotesData.list.length,
+                itemCount: allNotes.length,
                 itemBuilder: (context, index) {
                   return InkWell(
+                    overlayColor: WidgetStateColor.transparent,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NoteDetails( noteIndex: index, whichPage: 'note',),),).then((value) {
-                            setState(() {
-                              
-                            });
-                          },);
+                          builder: (context) =>
+                              NoteDetails(noteIndex: index, whichPage: 'note'),
+                        ),
+                      ).then((value) {
+                        setState(() {
+                          getNotes();
+                        });
+                      });
                     },
 
                     onLongPress: () {
@@ -171,6 +204,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
+                            backgroundColor: Colors.white,
                             title: Text("Are you sure to delete this Note"),
                             actions: [
                               ElevatedButton(
@@ -181,16 +215,39 @@ class _NoteDisplayState extends State<NoteDisplay> {
                               ),
 
                               ElevatedButton(
-                                onPressed: () {
-                                  NotesData.trashList.add(
-                                    NotesData.list[index],
-                                  ); // save to trust
-                                  NotesData.list.removeAt(index);
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Colors.red,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  // NotesData.trashList.add(
+                                  //   NotesData.list[index],
+                                  // ); // save to trust
+                                  // NotesData.list.removeAt(index);
+
+                                  var delTitle = allNotes[index]["title"];
+                                  var delDesc = allNotes[index]["desc"];
+                                  var delAt = DateTime.now().millisecondsSinceEpoch;
+
+                     await dbRef!.addTRASHNote(mTitle: delTitle, mDesc: delDesc, mDeletedAt: delAt);
+
+                                  bool check = await dbRef!.deleteNote(
+                                    sno:
+                                        allNotes[index][DBHelper
+                                            .COLUMN_NOTE_SNO],
+                                  );
+                                  if (check) {
+                                    getNotes();
+                                  }
 
                                   Navigator.pop(context);
                                   setState(() {});
                                 },
-                                child: Text("Confirm"),
+                                child: Text(
+                                  "Confirm",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ],
                           );
@@ -199,7 +256,11 @@ class _NoteDisplayState extends State<NoteDisplay> {
                       setState(() {});
                     },
 
-                    child: NoteSingleCard(index: index,),
+                    child: NoteSingleCard(
+                      index: index,
+                      whichPage: 'note',
+                      singleNoteMap: allNotes[index],
+                    ),
                   );
                 },
               ),
@@ -208,21 +269,30 @@ class _NoteDisplayState extends State<NoteDisplay> {
         ),
       ),
 
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
+      floatingActionButton: InkWell(
+        overlayColor: WidgetStateColor.transparent,
+        onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NoteModify(noteIndex: -1 ,)),
+            MaterialPageRoute(builder: (context) => NoteModify(noteIndex: -1)),
           ).then((value) {
-            setState(() {});
+            setState(() {
+              getNotes();
+            });
           });
         },
-        child: Text("ADD"),
+        child: CircleAvatar(
+          backgroundColor: Colors.white,
+
+          radius: 30,
+          child: Icon(
+            Icons.add,
+            color: Colors.blue,
+            size: 35,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
       ),
     );
   }
 }
-
-
-
-

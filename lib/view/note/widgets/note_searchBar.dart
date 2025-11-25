@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../search/search_screen.dart';
 class NoteSearchBarWidget extends StatelessWidget {
   const NoteSearchBarWidget({
     super.key,
@@ -7,19 +9,22 @@ class NoteSearchBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(),));
+      },
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 1),
+        contentPadding: EdgeInsets.symmetric(vertical: 0),
         filled: true,
-        fillColor: Color(0xFFF5F5F5),
+        fillColor: Color(0xFFE2E2E2),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 15),
           child: Icon(
-            Icons.search,
+            Icons.search_outlined,
             color: Color(0xFFB3B3B3),
-            size: 20,
+            size: 25,
           ),
         ),
-        hintText: "Search Products",
+        hintText: "Search",
         hintStyle: TextStyle(color: Color(0xFFB3B3B3)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

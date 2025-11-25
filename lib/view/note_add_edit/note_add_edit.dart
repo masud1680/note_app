@@ -3,11 +3,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:note_app/database/notes_data.dart';
+import 'package:note_app/view/bottom/bottom.dart';
 import 'package:note_app/view/note/note.dart';
-import 'package:note_app/view/note_add_edit/widgets/editor_data_save_button.dart';
+
 import 'package:note_app/view/note_add_edit/widgets/editor_details_input_field_widget.dart';
 import 'package:note_app/view/note_add_edit/widgets/editor_title_input_field_widget.dart';
 import 'package:note_app/view/note_add_edit/widgets/show_realtime_date_time_widget.dart';
+
+import '../../database/local_database.dart';
 
 class NoteModify extends StatefulWidget {
   const NoteModify({super.key, required this.noteIndex});
@@ -25,11 +28,11 @@ class _NoteModifyState extends State<NoteModify> {
 
   @override
   void initState() {
+    super.initState();
 
-    if(widget.noteIndex != -1){
-      int index = widget.noteIndex;
-      addDataTextField(index);
-    }
+    dbRef = DBHelper.getInstance;
+    getNotes();
+
 
 
     super.initState();
@@ -40,6 +43,25 @@ class _NoteModifyState extends State<NoteModify> {
       });
     });
   }
+
+  // timer close
+
+
+  // Database start
+  List<Map<String, dynamic>> allNotes = [];
+  DBHelper? dbRef;
+
+
+  void getNotes() async {
+    allNotes = await dbRef!.getAllNotes();
+    if(widget.noteIndex != -1){
+
+      addDataTextField(widget.noteIndex);
+    }
+    setState(() {});
+  }
+
+  // Database close
 
   @override
   void dispose() {
@@ -53,8 +75,8 @@ class _NoteModifyState extends State<NoteModify> {
   TextEditingController detailsController = TextEditingController();
 
   void addDataTextField(index) {
-    titleController.text = NotesData.list[index]["title"];
-    detailsController.text = NotesData.list[index]["details"];
+    titleController.text = allNotes[index]["title"];
+    detailsController.text = allNotes[index]["desc"];
   }
 
   @override
@@ -63,11 +85,109 @@ class _NoteModifyState extends State<NoteModify> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-
-        title: Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: Text("Note Editor"),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomSwitchScreen()));
+          },
+            child: Icon(Icons.arrow_back)
         ),
+        title: Text(
+            "Note Pad",
+          style: TextStyle(
+            fontSize: 16
+          ),
+        ),
+
+        actions: [
+          // Left arrow button
+          InkWell(splashColor: Colors.transparent,
+            onTap: () {
+
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 5),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 50,
+              width: 35,
+              child: Icon(Icons.undo_outlined, size: 25,),
+            ),
+          ),
+          // right arrow button
+          InkWell(splashColor: Colors.transparent,
+            onTap: () {
+
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 5),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 50,
+              width: 35,
+              child: Icon(Icons.redo_outlined, size: 25,),
+            ),
+          ),
+
+          // Save Note data
+          InkWell(
+            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+            onTap: () async{
+
+              var title = titleController.text;
+              var desc = detailsController.text;
+              var createdAt = DateTime.now().millisecondsSinceEpoch;
+
+
+              if (title.isNotEmpty &&
+                  desc.isNotEmpty) {
+                // Map<String, dynamic> singleNoteMap = {
+                //   "id": widget.noteIndex != -1 ? widget.noteIndex : NotesData.list.length,
+                //   "title": titleController.text,
+                //   "details": detailsController.text,
+                //   "created_at":  DateTime.now(),
+                //
+                // };
+
+
+
+                if(widget.noteIndex == -1){
+                  // NotesData.list.add(singleNoteMap);
+                  await dbRef!
+                      .addNote(mTitle: title, mDesc: desc,  mCreatedAt: createdAt,);
+                }else{
+                  // NotesData.list[widget.noteIndex] = singleNoteMap;
+
+                  var sno = allNotes[widget.noteIndex][DBHelper.COLUMN_NOTE_SNO];
+                  await dbRef!.updateNote(
+                      mTitle: title, mDesc: desc, sno: sno, mCreatedAt: createdAt,);
+                }
+
+              } else {
+                log("not saved......");
+              }
+
+
+
+
+              Navigator.pop(context);
+
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 15),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 50,
+              width: 35,
+              child: Icon(Icons.check, size: 30,),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -96,8 +216,7 @@ class _NoteModifyState extends State<NoteModify> {
           ),
         ),
       ),
-// save note information
-      floatingActionButton: EditorDataSaveButton(titleController: titleController, detailsController: detailsController, widget: widget, currentTime: _currentTime),
+
     );
   }
 }

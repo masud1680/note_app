@@ -14,8 +14,8 @@ void main(){
       navigatorObservers: [routeObserver], // Add the observer here
       debugShowCheckedModeBanner: false,
       // home: BottomSwitchScreen(),
-      // home: SplashScreen(),
-      home: NoteScreen(),
+      home: SplashScreen(),
+      // home: NoteScreen(),
     )
   );
 }

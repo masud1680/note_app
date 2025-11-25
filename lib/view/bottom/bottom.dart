@@ -29,46 +29,44 @@ class _BottomSwitchScreenState extends State<BottomSwitchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screen[pageIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: pageIndex,
-        onTap: (index) {
-          pageIndex = index;
-          setState(() {
+      bottomNavigationBar: Theme(
+        // This creates a custom theme ONLY for this widget subtree
+        data: Theme.of(context).copyWith(
+          // 1. Remove the ripple/splash effect
+          splashColor: Colors.transparent,
 
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.note_add_outlined),
-            label: "Notes",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.delete_forever),
-            label: "trash",
-          ),
-        ],
+          // 2. Remove the solid highlight effect that appears on hold
+          highlightColor: Colors.transparent,
+
+          // Optional: For newer Flutter versions/Material 3, you can use:
+          // splashFactory: NoSplash.splashFactory,
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Color(0xFFFAFAFA),
+          selectedItemColor: Colors.blue,
+
+
+          currentIndex: pageIndex,
+          onTap: (index) {
+
+            pageIndex = index;
+            setState(() {
+
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.description_outlined),
+              label: "Notes",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.delete_forever),
+              label: "trash",
+            ),
+          ],
+        ),
       ),
-      // bottomNavigationBar:  PersistentTabView(
-      //   tabs: [
-      //     PersistentTabConfig(
-      //       screen: NoteDisplay(),
-      //       item: ItemConfig(
-      //         icon: Icon(Icons.folder_copy_outlined),
-      //         title: "Note",
-      //       ),
-      //     ),
-      //
-      //     PersistentTabConfig(
-      //       screen: Trust(),
-      //       item: ItemConfig(
-      //         icon: Icon(Icons.delete_outline_outlined),
-      //         title: "Trust",
-      //       ),
-      //     ),
-      //   ],
-      //   navBarBuilder: (navBarConfig) =>
-      //       Style1BottomNavBar(navBarConfig: navBarConfig),
-      // ),
+
     );
   }
 }

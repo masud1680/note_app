@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:note_app/view/authentication/signIn_screen.dart';
 import 'package:note_app/view/bottom/bottom.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   
   void delayTime() async{
     await Future.delayed(Duration(seconds: 1));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomSwitchScreen(),));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen(),));
   }
   
   @override
