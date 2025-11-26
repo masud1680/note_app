@@ -5,6 +5,7 @@ import 'package:note_app/view/note/widgets/note_searchBar.dart';
 import 'package:note_app/view/note/widgets/note_single_card.dart';
 
 import '../../database/local_database.dart';
+import '../note_view/note_view.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key, required this.whichPage});
@@ -108,12 +109,29 @@ class _SearchScreenState extends State<SearchScreen> {
             child: ListView.builder(
                 itemCount: queryResultNotes.length,
                 itemBuilder: (context, index) {
-                  return NoteSingleCard(
-                    index: index,
-                    whichPage: widget.whichPage == "trash"
-                        ? "trashSearch"
-                        : "noteSearch",
-                    singleNoteMap: queryResultNotes[index],
+                  return InkWell(
+
+                    overlayColor: WidgetStateColor.transparent,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              NoteDetails(noteIndex: index, whichPage: widget.whichPage),
+                        ),
+                      ).then((value) {
+                        setState(() {
+                          getNotes();
+                        });
+                      });
+                    },
+                    child: NoteSingleCard(
+                      index: index,
+                      whichPage: widget.whichPage == "trash"
+                          ? "trashSearch"
+                          : "noteSearch",
+                      singleNoteMap: queryResultNotes[index],
+                    ),
                   );
                 },
               ),

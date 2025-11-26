@@ -40,6 +40,8 @@ class _NoteDetailsState extends State<NoteDetails> {
 
     singleNoteData = widget.whichPage == "note"
         ? allNotes[widget.noteIndex]
+        : widget.whichPage == "noteSearch" ? allNotes[widget.noteIndex]
+        : widget.whichPage == "trashSearch" ? allTrashNotes[widget.noteIndex]
         : allTrashNotes[widget.noteIndex];
 
     setState(() {});
