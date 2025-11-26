@@ -9,6 +9,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+  TextEditingController inputQuery = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,8 +20,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
         centerTitle: true,
         title: TextField(
+          controller: ,
+          onChanged: (value) {
+
+          },
           decoration: InputDecoration(
+
             contentPadding: EdgeInsets.symmetric(vertical: 0.1),
+
             filled: true,
             fillColor: Color(0xFFE2E2E2),
             prefixIcon: Padding(
