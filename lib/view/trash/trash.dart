@@ -57,9 +57,10 @@ class _TrashState extends State<Trash> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SearchScreen()),
+                  MaterialPageRoute(builder: (context) => SearchScreen(whichPage: 'trash',)),
                 );
               },
+              keyboardType: TextInputType.none,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 0),
                 filled: true,

@@ -47,7 +47,12 @@ class _NoteSingleCardState extends State<NoteSingleCard> {
         ),
 
         trailing: Text(
-          "${widget.whichPage == "note" ? DateFormat('dd/MM').format(DateTime.fromMillisecondsSinceEpoch(widget.singleNoteMap["created_at"])) : DateFormat('dd/MM').format(DateTime.fromMillisecondsSinceEpoch(widget.singleNoteMap["deleted_at"]))}",
+
+          widget.whichPage == "trashSearch" ? DateFormat('dd/MM').format(DateTime.fromMillisecondsSinceEpoch(widget.singleNoteMap["deleted_at"]))
+          : widget.whichPage == "noteSearch" ? DateFormat('dd/MM').format(DateTime.fromMillisecondsSinceEpoch(widget.singleNoteMap["created_at"]))
+          : widget.whichPage == "note" ? DateFormat('dd/MM').format(DateTime.fromMillisecondsSinceEpoch(widget.singleNoteMap["created_at"]))
+              : widget.whichPage == "trash" ?DateFormat('dd/MM').format(DateTime.fromMillisecondsSinceEpoch(widget.singleNoteMap["deleted_at"]))
+          : "",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),

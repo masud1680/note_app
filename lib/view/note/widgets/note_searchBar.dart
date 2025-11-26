@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../search/search_screen.dart';
@@ -10,8 +12,11 @@ class NoteSearchBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(),));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(whichPage: 'note',),));
+
       },
+
+      keyboardType: TextInputType.none,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 0),
         filled: true,
