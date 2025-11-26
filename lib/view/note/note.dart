@@ -139,44 +139,54 @@ class _NoteDisplayState extends State<NoteDisplay> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 10,
           children: [
-            InkWell(
-              splashColor: Colors.transparent,
-              onTap: () {
-                // 2. Call the function to show the dialog when pressed
-                _showCustomCard(context);
-              },
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                decoration: BoxDecoration(
-                  color: Color(0xFFF4A758),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                height: 50,
-                width: 100,
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Notes",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              color: Color(0xFFF5F5F5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10,
+                children: [
+                  // popup  card button
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      // 2. Call the function to show the dialog when pressed
+                      _showCustomCard(context);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFF4A758),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      height: 50,
+                      width: 100,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Notes",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+
+                  //Search box
+                  NoteSearchBarWidget(),
+                ],
               ),
             ),
-
-            //Search box
-            NoteSearchBarWidget(),
-
             // show note list
             Expanded(
               child: ListView.builder(
@@ -228,9 +238,14 @@ class _NoteDisplayState extends State<NoteDisplay> {
 
                                   var delTitle = allNotes[index]["title"];
                                   var delDesc = allNotes[index]["desc"];
-                                  var delAt = DateTime.now().millisecondsSinceEpoch;
+                                  var delAt =
+                                      DateTime.now().millisecondsSinceEpoch;
 
-                     await dbRef!.addTRASHNote(mTitle: delTitle, mDesc: delDesc, mDeletedAt: delAt);
+                                  await dbRef!.addTRASHNote(
+                                    mTitle: delTitle,
+                                    mDesc: delDesc,
+                                    mDeletedAt: delAt,
+                                  );
 
                                   bool check = await dbRef!.deleteNote(
                                     sno:
