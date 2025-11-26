@@ -27,11 +27,14 @@ class _NoteDetailsState extends State<NoteDetails> {
   late Map<String, dynamic> singleNoteData ;
   DBHelper? dbRef;
 
+late bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
     dbRef = DBHelper.getInstance;
     getNotes();
+
   }
 
   void getNotes() async {
@@ -45,6 +48,7 @@ class _NoteDetailsState extends State<NoteDetails> {
         : allTrashNotes[widget.noteIndex];
 
     setState(() {});
+    isLoading = true;
   }
 
   // Database close
@@ -111,7 +115,7 @@ class _NoteDetailsState extends State<NoteDetails> {
           ),
         ],
       ),
-      body: Padding(
+      body: isLoading ? Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: InkWell(
 
@@ -200,7 +204,9 @@ class _NoteDetailsState extends State<NoteDetails> {
             ),
           ),
         ),
-      ),
+      ) : Center(
+        child: Text("Notes Loading"),
+      )
     );
   }
 }

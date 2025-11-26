@@ -259,7 +259,7 @@ class _NoteDisplayState extends State<NoteDisplay> {
                     child: NoteSingleCard(
                       index: index,
                       whichPage: 'note',
-                      singleNoteMap: allNotes[index],
+                      singleNoteMapIn: allNotes[index],
                     ),
                   );
                 },

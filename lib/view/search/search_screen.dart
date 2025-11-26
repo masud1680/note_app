@@ -130,7 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       whichPage: widget.whichPage == "trash"
                           ? "trashSearch"
                           : "noteSearch",
-                      singleNoteMap: queryResultNotes[index],
+                      singleNoteMapIn: queryResultNotes[index],
                     ),
                   );
                 },

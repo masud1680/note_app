@@ -202,7 +202,7 @@ class _TrashState extends State<Trash> {
                           child: NoteSingleCard(
                             index: index,
                             whichPage: 'trash',
-                            singleNoteMap: allTrashNotes[index],
+                            singleNoteMapIn: allTrashNotes[index],
                           ),
                         );
                       },
