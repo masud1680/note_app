@@ -13,9 +13,9 @@ void main(){
     MaterialApp(
       navigatorObservers: [routeObserver], // Add the observer here
       debugShowCheckedModeBanner: false,
-      // home: BottomSwitchScreen(),
+      home: BottomSwitchScreen(),
       // home: SplashScreen(),
-      home: NoteScreen(),
+      // home: NoteScreen(),
     )
   );
 }
