@@ -1,16 +1,19 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:note_app/database/notes_data.dart';
+import 'package:note_app/model/note.dart';
+
 import 'package:note_app/view/note/widgets/note_searchBar.dart';
 import 'package:note_app/view/note/widgets/note_single_card.dart';
 import 'package:note_app/view/note_add_edit/note_add_edit.dart';
 import 'package:note_app/view/note_view/note_view.dart';
 import 'package:note_app/view/search/search_screen.dart';
-import 'package:note_app/view/settings/settings.dart';
+
 import 'package:intl/intl.dart';
 
-import '../../database/local_database.dart';
+import '../../controller/get.dart';
+
+
 
 class NoteDisplay extends StatefulWidget {
   const NoteDisplay({super.key});
@@ -75,21 +78,31 @@ class _NoteDisplayState extends State<NoteDisplay> {
   // popup note card close
 
   // Database start
-  List<Map<String, dynamic>> allNotes = [];
-  DBHelper? dbRef;
+  List<NoteModel> allNotes = [];
 
-  @override
-  void initState() {
-    super.initState();
-    dbRef = DBHelper.getInstance;
-    getNotes();
-  }
+
+bool isLoding = true;
 
   void getNotes() async {
-    allNotes = await dbRef!.getAllNotes();
+    isLoding = true;
+    setState(() {
+
+    });
+    await Future.delayed(Duration(seconds: 1));
+
+   allNotes = await GetNotesFromApi().getData();
+    isLoding = false;
     setState(() {});
   }
 
+
+  @override
+  void initState() {
+    getNotes();
+    super.initState();
+
+
+  }
   // Database close
 
   @override
@@ -118,12 +131,16 @@ class _NoteDisplayState extends State<NoteDisplay> {
             padding: const EdgeInsets.only(right: 15),
             child: InkWell(
               splashColor: Colors.transparent,
+
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Settings()),
-                );
+                getNotes();
               },
+              // onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => Settings()),
+              //   );
+              // },
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 5),
                 decoration: BoxDecoration(
@@ -132,13 +149,13 @@ class _NoteDisplayState extends State<NoteDisplay> {
                 ),
                 height: 50,
                 width: 35,
-                child: Icon(Icons.hexagon_outlined, size: 25),
+                child: Icon(Icons.refresh, size: 25),
               ),
             ),
           ),
         ],
       ),
-      body: Padding(
+      body:  Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,98 +200,105 @@ class _NoteDisplayState extends State<NoteDisplay> {
                   ),
 
                   //Search box
-                  NoteSearchBarWidget(),
+                  // NoteSearchBarWidget(),
                 ],
               ),
             ),
+
+
             // show note list
+            isLoding == true ?
+            Center(
+              child: CircularProgressIndicator(),
+            )
+                :
             Expanded(
               child: ListView.builder(
                 itemCount: allNotes.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     overlayColor: WidgetStateColor.transparent,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              NoteDetails(noteIndex: index, whichPage: 'note'),
-                        ),
-                      ).then((value) {
-                        setState(() {
-                          getNotes();
-                        });
-                      });
-                    },
+                    // onTap: () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) =>
+                    //           NoteDetails(noteIndex: index, whichPage: 'note'),
+                    //     ),
+                    //   ).then((value) {
+                    //     setState(() {
+                    //       getNotes();
+                    //     });
+                    //   });
+                    // },
 
-                    onLongPress: () {
-                      showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            backgroundColor: Colors.white,
-                            title: Text("Are you sure to delete this Note"),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text("Cancel"),
-                              ),
-
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    Colors.red,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  // NotesData.trashList.add(
-                                  //   NotesData.list[index],
-                                  // ); // save to trust
-                                  // NotesData.list.removeAt(index);
-
-                                  var delTitle = allNotes[index]["title"];
-                                  var delDesc = allNotes[index]["desc"];
-                                  var delAt =
-                                      DateTime.now().millisecondsSinceEpoch;
-
-                                  await dbRef!.addTRASHNote(
-                                    mTitle: delTitle,
-                                    mDesc: delDesc,
-                                    mDeletedAt: delAt,
-                                  );
-
-                                  bool check = await dbRef!.deleteNote(
-                                    sno:
-                                        allNotes[index][DBHelper
-                                            .COLUMN_NOTE_SNO],
-                                  );
-                                  if (check) {
-                                    getNotes();
-                                  }
-
-                                  Navigator.pop(context);
-                                  setState(() {});
-                                },
-                                child: Text(
-                                  "Confirm",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      setState(() {});
-                    },
+                    // onLongPress: () {
+                    //   showDialog(
+                    //     barrierDismissible: false,
+                    //     context: context,
+                    //     builder: (context) {
+                    //       return AlertDialog(
+                    //         backgroundColor: Colors.white,
+                    //         title: Text("Are you sure to delete this Note"),
+                    //         actions: [
+                    //           ElevatedButton(
+                    //             onPressed: () {
+                    //               Navigator.pop(context);
+                    //             },
+                    //             child: Text("Cancel"),
+                    //           ),
+                    //
+                    //           ElevatedButton(
+                    //             style: ButtonStyle(
+                    //               backgroundColor: WidgetStatePropertyAll(
+                    //                 Colors.red,
+                    //               ),
+                    //             ),
+                    //             onPressed: () async {
+                    //               // NotesData.trashList.add(
+                    //               //   NotesData.list[index],
+                    //               // ); // save to trust
+                    //               // NotesData.list.removeAt(index);
+                    //
+                    //               var delTitle = allNotes[index]["title"];
+                    //               var delDesc = allNotes[index]["desc"];
+                    //               var delAt =
+                    //                   DateTime.now().millisecondsSinceEpoch;
+                    //
+                    //               await dbRef!.addTRASHNote(
+                    //                 mTitle: delTitle,
+                    //                 mDesc: delDesc,
+                    //                 mDeletedAt: delAt,
+                    //               );
+                    //
+                    //               bool check = await dbRef!.deleteNote(
+                    //                 sno:
+                    //                     allNotes[index][DBHelper
+                    //                         .COLUMN_NOTE_SNO],
+                    //               );
+                    //               if (check) {
+                    //                 getNotes();
+                    //               }
+                    //
+                    //               Navigator.pop(context);
+                    //               setState(() {});
+                    //             },
+                    //             child: Text(
+                    //               "Confirm",
+                    //               style: TextStyle(color: Colors.white),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       );
+                    //     },
+                    //   );
+                    //   setState(() {});
+                    // },
 
                     child: NoteSingleCard(
-                      index: index,
+                      id: allNotes[index].id,
                       whichPage: 'note',
-                      singleNoteMapIn: allNotes[index],
+                      note: allNotes[index].note,
                     ),
                   );
                 },
@@ -286,16 +310,16 @@ class _NoteDisplayState extends State<NoteDisplay> {
 
       floatingActionButton: InkWell(
         overlayColor: WidgetStateColor.transparent,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NoteModify(noteIndex: -1)),
-          ).then((value) {
-            setState(() {
-              getNotes();
-            });
-          });
-        },
+        // onTap: () {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => NoteModify(noteIndex: -1)),
+        //   ).then((value) {
+        //     setState(() {
+        //       getNotes();
+        //     });
+        //   });
+        // },
         child: CircleAvatar(
           backgroundColor: Colors.white,
 

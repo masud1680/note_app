@@ -5,12 +5,11 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:note_app/view/note/note.dart';
 import 'package:note_app/view/note_add_edit/note_add_edit.dart';
-import 'package:note_app/view/settings/settings.dart';
 
 
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
-import '../trash/trash.dart';
+
 
 class BottomSwitchScreen extends StatefulWidget {
   const BottomSwitchScreen({super.key});
@@ -23,7 +22,7 @@ class _BottomSwitchScreenState extends State<BottomSwitchScreen> {
   // State variable to hold the selected index
   int pageIndex = 0;
 
-  List screen = [NoteDisplay(), Trash()];
+  List screen = [NoteDisplay()];
 
   @override
   Widget build(BuildContext context) {
