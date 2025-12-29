@@ -2,6 +2,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:note_app/view/bottom/bottom.dart';
 import 'package:note_app/view/note/note.dart';
 import 'package:note_app/view/note/note_screen.dart';
@@ -15,6 +16,7 @@ void main(){
       debugShowCheckedModeBanner: false,
       // home: BottomSwitchScreen(),
       home: SplashScreen(),
+      builder: EasyLoading.init(),
       // home: NoteScreen(),
     )
   );

@@ -310,16 +310,16 @@ bool isLoding = true;
 
       floatingActionButton: InkWell(
         overlayColor: WidgetStateColor.transparent,
-        // onTap: () {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => NoteModify(noteIndex: -1)),
-        //   ).then((value) {
-        //     setState(() {
-        //       getNotes();
-        //     });
-        //   });
-        // },
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NoteModify( whichPage: 'Note Add',)),
+          ).then((value) {
+            setState(() {
+              getNotes();
+            });
+          });
+        },
         child: CircleAvatar(
           backgroundColor: Colors.white,
 
